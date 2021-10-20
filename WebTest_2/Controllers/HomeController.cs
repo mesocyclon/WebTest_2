@@ -86,6 +86,59 @@ namespace WebTest_2.Controllers
             return RedirectToAction("Index");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+
+
+        public Phone GetPhoneById(Guid id)
+        {
+            return _dBContext.Phones.Single(x => x.PhoneId == id);
+        }
+
+        public Guid SavePhone(Phone entity)
+        {
+            if (entity.PhoneId == default)
+                _dBContext.Entry(entity).State = EntityState.Added;
+            else
+                _dBContext.Entry(entity).State = EntityState.Modified;
+            _dBContext.SaveChanges();
+
+            return entity.PhoneId;
+        }
+
+        public IActionResult PhoneEdit(Guid id)
+        {
+            Phone model = id == default ? new Phone() : GetPhoneById(id);
+            return View(model);
+        }
+        [HttpPost]
+        public IActionResult PhoneEdit(Phone model)
+        {
+            if (ModelState.IsValid)
+            {
+                SavePhone(model);
+                return RedirectToAction("Index");
+            }
+
+            return View(model);
+        }
+
+        public void DeletePhone(Phone entity)
+        {
+            _dBContext.Phones.Remove(entity);
+            _dBContext.SaveChanges();
+        }
+
+        [HttpPost]
+        public IActionResult PhoneDelete(Guid id)
+        {
+            DeletePhone(new Phone { PhoneId = id });
+            return RedirectToAction("Index");
+        }
+
+
 
         //   [Route("user-{Id}")]
         //   public IActionResult UserAdd()

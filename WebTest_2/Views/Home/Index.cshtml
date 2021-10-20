@@ -5,7 +5,7 @@
 @{
 
     List<User> Users = ViewBag.Users;
-    List<Phone> Phone = ViewBag.Phones;
+    List<Phone> Phones = ViewBag.Phones;
 }
 
 <div class="">
@@ -20,7 +20,6 @@
             <th scope="col">Имя</th>
             <th scope="col">Отчество</th>
             <th scope="col">Дата рождения</th>
-            <th scope="col"> </th>
             <th scope="col"> </th>
             <th scope="col"> </th>
         </tr>
@@ -45,9 +44,43 @@
                         <input type="submit" value=&#10008; />
                     </form>
                 </td>
+            
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="">
+    <a class="btn btn-primary m-2" role="button" asp-controller="Home" asp-action="PhoneEdit">Добавить номер телефона</a>
+</div>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Телефон</th>
+            <th scope="col"> </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Phone entity in Phones)
+        {
+            <tr>
+                <th scope="row">
+                    @entity.PhoneId
+                </th>
+                <td>@entity.PhoneNumber</td>
+  
                 <td>
-                    <a asp-controller="Home" asp-action="PhoneEdit" asp-route-id="@entity.Id">&#9742;</a>
+                    <a asp-controller="Home" asp-action="PhoneEdit" asp-route-id="@entity.PhoneId">&#10000;</a>
                 </td>
+                <td>
+                    <form method="post" asp-controller="Home" asp-action="PhoneDelete">
+                        <input type="hidden" value="@entity.PhoneId" name="Id" />
+                        <input type="submit" value=&#10008; />
+                    </form>
+                </td>
+              
             </tr>
         }
     </tbody>
