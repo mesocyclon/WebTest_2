@@ -1,11 +1,10 @@
-@model WebTest_2.Models.User
-
 @{
     ViewData["Title"] = "Лучший проект!";
 }
 
 @{
-    List<User> Users = ViewBag.Users;
+    var UsersList = ViewBag.Users;
+    var PhonesList = ViewBag.Phones;
     List<Phone> Phones = ViewBag.Phones;
     string @dataForm = ViewBag.DataForm;
 }
@@ -13,6 +12,7 @@
 <div class="">
     <a class="btn btn-primary m-2" role="button" asp-controller="Home" asp-action="UsersEdit">Добавить пользователя</a>
 </div>
+<h1>@dataForm</h1>
 
 <table class="table table-hover">
     <thead>
@@ -22,33 +22,43 @@
             <th scope="col">Имя</th>
             <th scope="col">Отчество</th>
             <th scope="col">Дата рождения</th>
+            <th scope="col">Телефоны</th>
             <th scope="col"> </th>
             <th scope="col"> </th>
-
+            <th scope="col"> </th>
         </tr>
     </thead>
     <tbody>
-        @foreach (User entity in Users)
+        @foreach (var row in UsersList)
         {
             <tr>
                 <th scope="row">
-                    @entity.Id
+                    @row.id
                 </th>
-                <td>@entity.FirstName</td>
-                <td>@entity.LastName</td>
-                <td>@entity.SecondName</td>
-                <td>@entity.DateBirth</td>
+                <td>@row.first_name</td>
+                <td>@row.last_name</td>
+                <td>@row.second_name</td>
+                <td>@row.date_birth</td>
                 <td>
-                    <a asp-controller="Home" asp-action="UsersEdit" asp-route-id="@entity.Id">&#10000;</a>
+                    @foreach (var p in @row.phone_list)
+                    {
+                        <a class="btn btn-primary m-2" role="button" asp-controller="Home" asp-action="UsersPhoneEdit" asp-phone-id="@p.id" asp-user-id="@row.id">@p.phone</a>
+                    }
+                </td>
+
+                <td>
+                    <a asp-controller="Home" asp-action="UsersEdit" asp-route-id="@row.id">&#10000;</a>
                 </td>
                 <td>
                     <form method="post" asp-controller="Home" asp-action="UsersDelete">
-                        <input type="hidden" value="@entity.Id" name="Id" />
+                        <input type="hidden" value="@row.id" name="Id" />
                         <input type="submit" value=&#10008; />
                     </form>
                 </td>
 
-
+                <td>
+                    <a asp-controller="Home" asp-action="UsersToPhone" asp-route-id="@row.id">&#10000;</a>
+                </td>
 
             </tr>
         }
@@ -66,7 +76,7 @@
             <th scope="col">Телефон</th>
             <th scope="col"> </th>
             <th scope="col"> </th>
-
+            <th scope="col"> </th>
         </tr>
     </thead>
     <tbody>
@@ -88,38 +98,13 @@
                     </form>
                 </td>
 
+                <td>
+                    <a asp-controller="Home" asp-action="PhoneToUsers" asp-route-id="@entity.Id">&#10000;</a>
+                </td>
 
             </tr>
         }
     </tbody>
 </table>
 
-<h1>@dataForm</h1>
 
-
-<form method="post" asp-controller="Home" asp-action="UsersToPhone">
-    <select asp-for="Id">
-        <option value="0">Пользователь</option>
-
-        @{
-            foreach (User entity in Users)
-            {
-                <option value="@entity.Id">@entity.Id</option>
-            }
-        }
-
-    </select>
-
-    <select asp-for="Id">
-        <option value="0">Телефон</option>
-
-        @{
-            foreach (Phone entity in Phones)
-            {
-                <option value="@entity.Id">@entity.Id</option>
-            }
-        }
-
-    </select>
-    <input type="submit" value=&#10008; />
-</form>
