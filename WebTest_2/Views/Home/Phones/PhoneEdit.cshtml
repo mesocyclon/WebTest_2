@@ -1,8 +1,13 @@
 ﻿@model WebTest_2.Models.Phone
 
+@{
+    var PhoneNum = ViewBag.PhoneNum;
+    Guid aPhoneID = PhoneNum.Id;
+    string aPhoneNum = PhoneNum.PhoneNumber;
+}
+
 <div class="text-center">
     <h1>Редактировать телефон</h1>
-    <h1>СТРАНИЦА В РАЗРАБОТКЕ!</h1>
     <div>
         <form asp-controller="Home" asp-action="PhoneEdit" method="post">
             <input type="hidden" asp-for="Id" />
@@ -10,7 +15,8 @@
 
             <div>
                 <label>Номер телефона</label>
-                <input asp-for="PhoneNumber" />
+                <input type="hidden" name="PhoneId" value="@aPhoneID" />
+                <input asp-for="PhoneNumber" value="@aPhoneNum" />
                 <span asp-validation-for="PhoneNumber"></span>
             </div>
 

@@ -62,8 +62,8 @@ namespace WebTest_2.Controllers
                 UserList.Add(new TableUserForm
                 {
                     id = entity.Id,
-                    first_name = entity.FirstName,
-                    last_name = entity.LastName,
+                    first_name  = entity.FirstName,
+                    last_name   = entity.LastName,
                     second_name = entity.SecondName,
                     date_birth = entity.DateBirth.ToString(),
                     phone_list = PhonesUser.ToArray()
@@ -179,9 +179,20 @@ namespace WebTest_2.Controllers
             Phone model = id == default ? new Phone() : GetPhoneById(id);
             return View(model);
         }
-        public IActionResult UsersPhoneEdit(Guid id)
-        {
-            Phone model = id == default ? new Phone() : GetPhoneById(id);
+
+        [HttpPost]
+        public IActionResult UsersPhoneEdit()
+        { 
+            Guid idPhone = new Guid();
+            foreach (var row in Request.Form)
+            {
+                if (row.Key == "phone-id")
+                    idPhone = new Guid(row.Value);
+            }
+
+            Phone PhoneNum = idPhone == default ? new Phone() : GetPhoneById(idPhone);
+            
+            ViewBag.PhoneNum = PhoneNum;
             return View("~/Views/Home/Phones/PhoneEdit.cshtml");
         }
 

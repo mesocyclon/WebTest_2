@@ -42,7 +42,13 @@
                 <td>
                     @foreach (var p in @row.phone_list)
                     {
-                        <a class="btn btn-primary m-2" role="button" asp-controller="Home" asp-action="UsersPhoneEdit" asp-phone-id="@p.id" asp-user-id="@row.id">@p.phone</a>
+                    <form method="post" asp-controller="Home" asp-action="UsersPhoneEdit">
+                        <input type="hidden" name="user-id" value="@row.id" />
+                        <input type="hidden" name="phone-id" value="@p.id" />
+                        <input type="hidden" name="phone-id11111" value="@p.id" />
+                        <button type="submit">отправить</button>
+                        <a class="btn btn-primary m-2" role="button" type="submit" asp-controller="Home" asp-action="UsersPhoneEdit" asp-route-idPhone="@p.id" asp-route-idUser="@row.id">@p.phone</a>
+                    </form>
                     }
                 </td>
 
