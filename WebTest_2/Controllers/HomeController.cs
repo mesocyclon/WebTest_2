@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using WebTest_2.Models;
+using Newtonsoft.Json.Linq;
 
 namespace WebTest_2.Controllers
 {
@@ -15,6 +16,23 @@ namespace WebTest_2.Controllers
 
         private readonly SqlDBContext _dBContext;
 
+        public class TableUserForm
+        {
+            public Guid id { get; set; }
+            public string last_name { get; set; }
+            public string first_name { get; set; }
+            public string second_name { get; set; }
+            public string date_birth { get; set; }            
+            public Array phone_list { get; set; }
+        }
+
+        public class TablePhones
+        {
+            public Guid id { get; set; }
+            public string phone { get; set; }
+        }
+         
+
         public HomeController()
         {
             _dBContext = new SqlDBContext();
@@ -22,17 +40,61 @@ namespace WebTest_2.Controllers
 
         public IActionResult Index()
         {
-            // User model = new User();
-            //  return View(model);
+            ViewBag.Users       = _dBContext.Users.ToList();
+            ViewBag.Phones      = _dBContext.Phones.ToList();
+            ViewBag.PhoneList   = _dBContext.PhoneBooks.ToList();
 
-            ViewBag.Users = _dBContext.Users.ToList();
-            ViewBag.Phones = _dBContext.Phones.ToList();
+            string phone_number = null;
+            List<TableUserForm> UserList    = new List<TableUserForm>(); 
+
+            foreach (User entity in ViewBag.Users)
+            {
+                List<TablePhones> PhonesUser = new List<TablePhones>();
+                foreach (var L in ViewBag.PhoneList)
+                {
+                    if (L.UserId == entity.Id)
+                    {
+                        phone_number = getPhoneFromId(ViewBag.Phones, L.PhoneId) ;
+                        PhonesUser.Add(new TablePhones { id = L.PhoneId, phone = phone_number });
+                    }
+                }                  
+
+                UserList.Add(new TableUserForm {    id          = entity.Id , 
+                                                    first_name  = entity.FirstName, 
+                                                    last_name   = entity.LastName, 
+                                                    second_name = entity.SecondName,
+                                                    date_birth  = entity.DateBirth.ToString(),
+                                                    phone_list  = PhonesUser.ToArray()
+                });                
+            }
+            ViewBag.Users = UserList;
+
+            string s = null;
+            foreach(var entity in ViewBag.Users)
+            {
+                s = entity.id.ToString();
+            }
 
             ViewBag.DataForm = "Связь пользователя и телефона";
             
 
             return View();
         }
+
+        private string getPhoneFromId(List<Phone> aPhones, Guid aId)
+        {
+            string s = null;
+            foreach (Phone p in aPhones)
+            {
+                if (p.Id == aId)
+                {
+                    s = p.PhoneNumber;
+                    break;
+                }
+            }
+            return s;
+        }
+
 
         public IActionResult EntityFrameworkCore()
         {
@@ -116,6 +178,12 @@ namespace WebTest_2.Controllers
             Phone model = id == default ? new Phone() : GetPhoneById(id);
             return View(model);
         }
+        public IActionResult UsersPhoneEdit(Guid id)
+        {
+            Phone model = id == default ? new Phone() : GetPhoneById(id);
+            return View("~/Views/Home/Phones/PhoneEdit.cshtml");
+        }
+        
         [HttpPost]
         public IActionResult PhoneEdit(Phone model)
         {

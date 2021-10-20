@@ -1,0 +1,21 @@
+﻿@model WebTest_2.Models.Phone
+
+<div class="text-center">
+    <h1>Редактировать телефон</h1>
+    <h1>СТРАНИЦА В РАЗРАБОТКЕ!</h1>
+    <div>
+        <form asp-controller="Home" asp-action="PhoneEdit" method="post">
+            <input type="hidden" asp-for="Id" />
+            <div asp-validation-summary="All"></div>
+
+            <div>
+                <label>Номер телефона</label>
+                <input asp-for="PhoneNumber" />
+                <span asp-validation-for="PhoneNumber"></span>
+            </div>
+
+            <input type="submit" value="Готово" />
+        </form>
+    </div>
+</div>
+
