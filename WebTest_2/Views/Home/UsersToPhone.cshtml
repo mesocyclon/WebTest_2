@@ -1,0 +1,19 @@
+﻿@model WebTest_2.Models.User
+
+
+<div class="text-center">
+    <h1>Редактировать телефон</h1>
+    <div>
+        <form asp-controller="Home" asp-action="UsersToPhone" method="post">
+            <input type="hidden" asp-for="Id" />
+            <div asp-validation-summary="All"></div>
+
+            <div>
+                <label>Номер телефона</label>
+                <input type="hidden" asp-for="Id" />
+                <div asp-validation-summary="All"></div>
+            </div>
+            <p><input type="submit" value="Отправить"></p>
+        </form>
+    </div>
+</div>

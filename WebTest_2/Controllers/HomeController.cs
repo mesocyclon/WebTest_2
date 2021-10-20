@@ -133,7 +133,9 @@ namespace WebTest_2.Controllers
             _dBContext.SaveChanges();
         }
 
-        [HttpPost]
+   
+
+       [HttpPost]
         public IActionResult PhoneDelete(Guid id)
         {
             DeletePhone(new Phone { Id = id });
@@ -170,6 +172,40 @@ namespace WebTest_2.Controllers
         //  {
         //      return View();
         //  }
+
+        public IActionResult UsersToPhone(Guid id_1, Guid id_2)
+        {
+            PhoneBook model = id_1 == default ? new PhoneBook() : GetPBById(id_1,id_2);
+            return View(model);
+        }
+
+        public PhoneBook GetPBById(Guid id_1, Guid id_2)
+        {
+            return _dBContext.PhoneBooks.Single(x => x.UserId == id_2);
+        }
+
+        [HttpPost]
+        public IActionResult UsersToPhone(PhoneBook model)
+        {
+            if (ModelState.IsValid)
+            {
+                SavePhone(model);
+                return RedirectToAction("Index");
+            }
+
+            return View(model);
+        }
+
+        public Guid SavePhone(PhoneBook entity)
+        {
+            if (entity.UserId == default)
+                _dBContext.Entry(entity).State = EntityState.Added;
+            else
+                _dBContext.Entry(entity).State = EntityState.Modified;
+            _dBContext.SaveChanges();
+
+            return entity.UserId;
+        }
 
         public IActionResult Privacy()
         {
