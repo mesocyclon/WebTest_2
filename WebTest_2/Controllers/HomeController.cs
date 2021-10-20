@@ -22,7 +22,7 @@ namespace WebTest_2.Controllers
             public string last_name { get; set; }
             public string first_name { get; set; }
             public string second_name { get; set; }
-            public string date_birth { get; set; }            
+            public string date_birth { get; set; }
             public Array phone_list { get; set; }
         }
 
@@ -31,7 +31,7 @@ namespace WebTest_2.Controllers
             public Guid id { get; set; }
             public string phone { get; set; }
         }
-         
+
 
         public HomeController()
         {
@@ -40,12 +40,12 @@ namespace WebTest_2.Controllers
 
         public IActionResult Index()
         {
-            ViewBag.Users       = _dBContext.Users.ToList();
-            ViewBag.Phones      = _dBContext.Phones.ToList();
-            ViewBag.PhoneList   = _dBContext.PhoneBooks.ToList();
+            ViewBag.Users = _dBContext.Users.ToList();
+            ViewBag.Phones = _dBContext.Phones.ToList();
+            ViewBag.PhoneList = _dBContext.PhoneBooks.ToList();
 
             string phone_number = null;
-            List<TableUserForm> UserList    = new List<TableUserForm>(); 
+            List<TableUserForm> UserList = new List<TableUserForm>();
 
             foreach (User entity in ViewBag.Users)
             {
@@ -54,29 +54,30 @@ namespace WebTest_2.Controllers
                 {
                     if (L.UserId == entity.Id)
                     {
-                        phone_number = getPhoneFromId(ViewBag.Phones, L.PhoneId) ;
+                        phone_number = getPhoneFromId(ViewBag.Phones, L.PhoneId);
                         PhonesUser.Add(new TablePhones { id = L.PhoneId, phone = phone_number });
                     }
-                }                  
+                }
 
-                UserList.Add(new TableUserForm {    id          = entity.Id , 
-                                                    first_name  = entity.FirstName, 
-                                                    last_name   = entity.LastName, 
-                                                    second_name = entity.SecondName,
-                                                    date_birth  = entity.DateBirth.ToString(),
-                                                    phone_list  = PhonesUser.ToArray()
-                });                
+                UserList.Add(new TableUserForm
+                {
+                    id = entity.Id,
+                    first_name = entity.FirstName,
+                    last_name = entity.LastName,
+                    second_name = entity.SecondName,
+                    date_birth = entity.DateBirth.ToString(),
+                    phone_list = PhonesUser.ToArray()
+                });
             }
             ViewBag.Users = UserList;
 
             string s = null;
-            foreach(var entity in ViewBag.Users)
+            foreach (var entity in ViewBag.Users)
             {
                 s = entity.id.ToString();
             }
 
-            ViewBag.DataForm = "Связь пользователя и телефона";
-            
+            ViewBag.DataForm = "Привет Тест";
 
             return View();
         }
@@ -100,7 +101,7 @@ namespace WebTest_2.Controllers
         {
             ViewBag.Users = _dBContext.Users.ToList();
             ViewBag.Phones = _dBContext.Phones.ToList();
-            
+
             return View();
         }
 
@@ -183,7 +184,7 @@ namespace WebTest_2.Controllers
             Phone model = id == default ? new Phone() : GetPhoneById(id);
             return View("~/Views/Home/Phones/PhoneEdit.cshtml");
         }
-        
+
         [HttpPost]
         public IActionResult PhoneEdit(Phone model)
         {
@@ -202,9 +203,9 @@ namespace WebTest_2.Controllers
             _dBContext.SaveChanges();
         }
 
-   
 
-       [HttpPost]
+
+        [HttpPost]
         public IActionResult PhoneDelete(Guid id)
         {
             DeletePhone(new Phone { Id = id });
@@ -244,47 +245,37 @@ namespace WebTest_2.Controllers
 
         public IActionResult UsersToPhone(Guid id_1, Guid id_2)
         {
-            System.Guid id_11 = new Guid("c6c4fbe0-8d64-4725-a520-08d993b2fabb");
-            System.Guid id_12 = new Guid("6e60aa30-45e4-450f-04fd-08d993b8bf9d");
-            ;            //PhoneBook model = id_1 == default ? new PhoneBook() : GetPBById(id_1,id_2);
-            //return View(model);
-            PhoneBook PhoneBook = new PhoneBook { PhoneId = id_12, UserId = id_11};
-                   _dBContext.Add<PhoneBook>(PhoneBook);
-                  _dBContext.SaveChanges();
-
-
-            //  var insertCommand = "INSERT INTO Movies (Title, Genre, Year) VALUES(@0, @1, @2)";
-            //  _dBContext.Execute(insertCommand, id_1, id_2);
-              return View(PhoneBook);
+            PhoneBook model = id_1 == default ? new PhoneBook() : GetPBById(id_1, id_2);
+            return View(model);
         }
 
-        //  public PhoneBook GetPBById(Guid id_1, Guid id_2)
-        //  {
-        //      return _dBContext.PhoneBooks.Single(x => x.UserId == id_2);
-        //  }
-        //
-        //  [HttpPost]
-        //  public IActionResult UsersToPhone(PhoneBook model)
-        //  {
-        //      if (ModelState.IsValid)
-        //      {
-        //          SavePhone(model);
-        //          return RedirectToAction("Index");
-        //      }
-        //
-        //      return View(model);
-        //  }
-        //
-        //  public Guid SavePhone(PhoneBook entity)
-        //  {
-        //      if (entity.UserId == default)
-        //          _dBContext.Entry(entity).State = EntityState.Added;
-        //      else
-        //          _dBContext.Entry(entity).State = EntityState.Modified;
-        //      _dBContext.SaveChanges();
-        //
-        //      return entity.UserId;
-        //  }
+        public PhoneBook GetPBById(Guid id_1, Guid id_2)
+        {
+            return _dBContext.PhoneBooks.Single(x => x.UserId == id_2);
+        }
+
+        [HttpPost]
+        public IActionResult UsersToPhone(PhoneBook model)
+        {
+            if (ModelState.IsValid)
+            {
+                SavePhone(model);
+                return RedirectToAction("Index");
+            }
+
+            return View(model);
+        }
+
+        public Guid SavePhone(PhoneBook entity)
+        {
+            if (entity.UserId == default)
+                _dBContext.Entry(entity).State = EntityState.Added;
+            else
+                _dBContext.Entry(entity).State = EntityState.Modified;
+            _dBContext.SaveChanges();
+
+            return entity.UserId;
+        }
 
         public IActionResult Privacy()
         {
