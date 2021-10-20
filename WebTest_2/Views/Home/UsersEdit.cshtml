@@ -1,0 +1,35 @@
+﻿@model WebTest_2.Models.User
+
+<div class="text-center">
+    <h1>Редактировать юзера</h1>
+    <div>
+        <form asp-controller="Home" asp-action="UsersEdit" method="post">
+            <input type="hidden" asp-for="Id" />
+            <div asp-validation-summary="All"></div>
+
+            <div>
+                <label>Фамилия</label>
+                <input asp-for="LastName" />
+                <span asp-validation-for="LastName"></span>
+            </div>
+            <div>
+                <label>Имя</label>
+                <input asp-for="FirstName" />
+                <span asp-validation-for="FirstName"></span>
+            </div>
+            <div>
+                <label>Отчество</label>
+                <input asp-for="SecondName" />
+                <span asp-validation-for="SecondName"></span>
+            </div>
+
+            <div>
+                <label>Дата рождения</label>
+                <input asp-for="Date1" />
+                <span asp-validation-for="Date1"></span>
+            </div>
+            <input type="submit" value="Готово" />
+        </form>
+    </div>
+</div>
+

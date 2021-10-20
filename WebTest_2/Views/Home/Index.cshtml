@@ -1,12 +1,56 @@
-﻿@model IQueryable<WebTest_2.Models.User>
-@{
-    ViewData["Title"] = "Какая-то фигня";
+﻿@{
+    ViewData["Title"] = "Лучший проект!";
 }
 
+@{
 
+    List<User> Users = ViewBag.Users;
+    List<Phone> Phone = ViewBag.Phones;
+}
 
-<div class="text-center">
-    <a asp-controller="Home" asp-action="UserAdd">Новый пользователь</a>
+<div class="">
+    <a class="btn btn-primary m-2" role="button" asp-controller="Home" asp-action="UsersEdit">Добавить пользователя</a>
 </div>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Фамилия</th>
+            <th scope="col">Имя</th>
+            <th scope="col">Отчество</th>
+            <th scope="col">Дата рождения</th>
+            <th scope="col"> </th>
+            <th scope="col"> </th>
+            <th scope="col"> </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (User entity in Users)
+        {
+            <tr>
+                <th scope="row">
+                    @entity.Id
+                </th>
+                <td>@entity.FirstName</td>
+                <td>@entity.LastName</td>
+                <td>@entity.SecondName</td>
+                <td>@entity.Date1</td>
+                <td>
+                    <a asp-controller="Home" asp-action="UsersEdit" asp-route-id="@entity.Id">&#10000;</a>
+                </td>
+                <td>
+                    <form method="post" asp-controller="Home" asp-action="UsersDelete">
+                        <input type="hidden" value="@entity.Id" name="Id" />
+                        <input type="submit" value=&#10008; />
+                    </form>
+                </td>
+                <td>
+                    <a asp-controller="Home" asp-action="PhoneEdit" asp-route-id="@entity.Id">&#9742;</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 
 

@@ -22,34 +22,87 @@ namespace WebTest_2.Controllers
 
         public IActionResult Index()
         {
+            // User model = new User();
+            //  return View(model);
+
+            ViewBag.Users = _dBContext.Users.ToList();
+            ViewBag.Phones = _dBContext.Phones.ToList();
+
             return View();
         }
 
         public IActionResult EntityFrameworkCore()
         {
-            ViewBag.User = _dBContext.Users.ToList();
-            ViewBag.Phone = _dBContext.Phones.ToList();
+            ViewBag.Users = _dBContext.Users.ToList();
+            ViewBag.Phones = _dBContext.Phones.ToList();
             
             return View();
         }
 
 
-     //   [Route("user-{Id}")]
-        public IActionResult UserAdd()
+        public User GetUserById(Guid id)
         {
+            return _dBContext.Users.Single(x => x.Id == id);
+        }
 
-            User user = new User { Id = new Guid("30FB2ED3-EA0E-4F05-B0DB-EF6341A593F0"), SecondName = "gsdbjdz" ,FirstName = "William", LastName = "Shakespeare", Date1 = new DateTime(2010, 1, 18) };
-            _dBContext.Add<User>(user);
+        public Guid SaveUser(User entity)
+        {
+            if (entity.Id == default)
+                _dBContext.Entry(entity).State = EntityState.Added;
+            else
+                _dBContext.Entry(entity).State = EntityState.Modified;
             _dBContext.SaveChanges();
 
-          //  User user = _dBContext.Users.Add(sc => sc.Id == id).FirstOrDefault();
-
-
-         //   user.NumberViews++;
-          //  _dBContext.SaveChanges();
-
-            return View(user);
+            return entity.Id;
         }
+
+        public IActionResult UsersEdit(Guid id)
+        {
+            User model = id == default ? new User() : GetUserById(id);
+            return View(model);
+        }
+        [HttpPost]
+        public IActionResult UsersEdit(User model)
+        {
+            if (ModelState.IsValid)
+            {
+                SaveUser(model);
+                return RedirectToAction("Index");
+            }
+
+            return View(model);
+        }
+
+        public void DeleteUser(User entity)
+        {
+            _dBContext.Users.Remove(entity);
+            _dBContext.SaveChanges();
+        }
+
+        [HttpPost]
+        public IActionResult UsersDelete(Guid id)
+        {
+            DeleteUser(new User { Id = id });
+            return RedirectToAction("Index");
+        }
+
+
+        //   [Route("user-{Id}")]
+        //   public IActionResult UserAdd()
+        //   {
+        //
+        //       User user = new User {  SecondName = "gsdbjdz" ,FirstName = "William", LastName = "Shakespeare", Date1 = new DateTime(2010, 1, 18) };
+        //       _dBContext.Add<User>(user);
+        //       _dBContext.SaveChanges();
+        //
+        //     //  User user = _dBContext.Users.Add(sc => sc.Id == id).FirstOrDefault();
+        //
+        //
+        //    //   user.NumberViews++;
+        //     //  _dBContext.SaveChanges();
+        //
+        //       return View(user);
+        //   }
 
         //  private readonly ILogger<HomeController> _logger;
         //

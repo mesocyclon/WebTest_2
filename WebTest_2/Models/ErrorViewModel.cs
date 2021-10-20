@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 
 namespace WebTest_2.Models
 {
@@ -17,6 +18,8 @@ namespace WebTest_2.Models
         public string FirstName { get; set; }
         public string SecondName { get; set; }
         public DateTime Date1 { get; set; }
+
+       // public List<User> Users { get; set; }
     }
 
     public class Phone
