@@ -57,7 +57,7 @@ namespace WebTest_2.Models
 
         public DbSet<PhoneBook> PhoneBooks/*имя таблицы*/{ get; set; }
         // public DbSet<PhoneUsers> PhoneUsers/*имя таблицы*/{ get; set; }
-
+         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder
