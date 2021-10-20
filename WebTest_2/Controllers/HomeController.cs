@@ -28,7 +28,7 @@ namespace WebTest_2.Controllers
             ViewBag.Users = _dBContext.Users.ToList();
             ViewBag.Phones = _dBContext.Phones.ToList();
 
-            ViewBag.DataForm = "Привет Тест";
+            ViewBag.DataForm = "Связь пользователя и телефона";
 
             return View();
         }
@@ -175,37 +175,45 @@ namespace WebTest_2.Controllers
 
         public IActionResult UsersToPhone(Guid id_1, Guid id_2)
         {
-            PhoneBook model = id_1 == default ? new PhoneBook() : GetPBById(id_1,id_2);
-            return View(model);
+            //PhoneBook model = id_1 == default ? new PhoneBook() : GetPBById(id_1,id_2);
+            //return View(model);
+            PhoneBook PhoneBook = new PhoneBook { PhoneId = id_1, UserId = id_1};
+                   _dBContext.Add<PhoneBook>(PhoneBook);
+                  _dBContext.SaveChanges();
+
+
+            //  var insertCommand = "INSERT INTO Movies (Title, Genre, Year) VALUES(@0, @1, @2)";
+            //  _dBContext.Execute(insertCommand, id_1, id_2);
+              return View(PhoneBook);
         }
 
-        public PhoneBook GetPBById(Guid id_1, Guid id_2)
-        {
-            return _dBContext.PhoneBooks.Single(x => x.UserId == id_2);
-        }
-
-        [HttpPost]
-        public IActionResult UsersToPhone(PhoneBook model)
-        {
-            if (ModelState.IsValid)
-            {
-                SavePhone(model);
-                return RedirectToAction("Index");
-            }
-
-            return View(model);
-        }
-
-        public Guid SavePhone(PhoneBook entity)
-        {
-            if (entity.UserId == default)
-                _dBContext.Entry(entity).State = EntityState.Added;
-            else
-                _dBContext.Entry(entity).State = EntityState.Modified;
-            _dBContext.SaveChanges();
-
-            return entity.UserId;
-        }
+        //  public PhoneBook GetPBById(Guid id_1, Guid id_2)
+        //  {
+        //      return _dBContext.PhoneBooks.Single(x => x.UserId == id_2);
+        //  }
+        //
+        //  [HttpPost]
+        //  public IActionResult UsersToPhone(PhoneBook model)
+        //  {
+        //      if (ModelState.IsValid)
+        //      {
+        //          SavePhone(model);
+        //          return RedirectToAction("Index");
+        //      }
+        //
+        //      return View(model);
+        //  }
+        //
+        //  public Guid SavePhone(PhoneBook entity)
+        //  {
+        //      if (entity.UserId == default)
+        //          _dBContext.Entry(entity).State = EntityState.Added;
+        //      else
+        //          _dBContext.Entry(entity).State = EntityState.Modified;
+        //      _dBContext.SaveChanges();
+        //
+        //      return entity.UserId;
+        //  }
 
         public IActionResult Privacy()
         {
