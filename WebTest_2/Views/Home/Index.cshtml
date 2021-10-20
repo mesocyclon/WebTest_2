@@ -3,14 +3,15 @@
 }
 
 @{
-
-    List<User> Users = ViewBag.Users;
-    List<Phone> Phones = ViewBag.Phones;
+    List<User>      Users       = ViewBag.Users;
+    List<Phone>     Phones      = ViewBag.Phones;
+    string @dataForm = ViewBag.DataForm;
 }
 
 <div class="">
     <a class="btn btn-primary m-2" role="button" asp-controller="Home" asp-action="UsersEdit">Добавить пользователя</a>
 </div>
+<h1>@dataForm</h1>
 
 <table class="table table-hover">
     <thead>
@@ -34,7 +35,7 @@
                 <td>@entity.FirstName</td>
                 <td>@entity.LastName</td>
                 <td>@entity.SecondName</td>
-                <td>@entity.Date1</td>
+                <td>@entity.DateBirth</td>
                 <td>
                     <a asp-controller="Home" asp-action="UsersEdit" asp-route-id="@entity.Id">&#10000;</a>
                 </td>
@@ -67,16 +68,16 @@
         {
             <tr>
                 <th scope="row">
-                    @entity.PhoneId
+                    @entity.Id
                 </th>
                 <td>@entity.PhoneNumber</td>
   
                 <td>
-                    <a asp-controller="Home" asp-action="PhoneEdit" asp-route-id="@entity.PhoneId">&#10000;</a>
+                    <a asp-controller="Home" asp-action="PhoneEdit" asp-route-id="@entity.Id">&#10000;</a>
                 </td>
                 <td>
                     <form method="post" asp-controller="Home" asp-action="PhoneDelete">
-                        <input type="hidden" value="@entity.PhoneId" name="Id" />
+                        <input type="hidden" value="@entity.Id" name="Id" />
                         <input type="submit" value=&#10008; />
                     </form>
                 </td>

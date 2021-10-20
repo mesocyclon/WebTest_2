@@ -28,6 +28,8 @@ namespace WebTest_2.Controllers
             ViewBag.Users = _dBContext.Users.ToList();
             ViewBag.Phones = _dBContext.Phones.ToList();
 
+            ViewBag.DataForm = "Привет Тест";
+
             return View();
         }
 
@@ -94,18 +96,18 @@ namespace WebTest_2.Controllers
 
         public Phone GetPhoneById(Guid id)
         {
-            return _dBContext.Phones.Single(x => x.PhoneId == id);
+            return _dBContext.Phones.Single(x => x.Id == id);
         }
 
         public Guid SavePhone(Phone entity)
         {
-            if (entity.PhoneId == default)
+            if (entity.Id == default)
                 _dBContext.Entry(entity).State = EntityState.Added;
             else
                 _dBContext.Entry(entity).State = EntityState.Modified;
             _dBContext.SaveChanges();
 
-            return entity.PhoneId;
+            return entity.Id;
         }
 
         public IActionResult PhoneEdit(Guid id)
@@ -134,7 +136,7 @@ namespace WebTest_2.Controllers
         [HttpPost]
         public IActionResult PhoneDelete(Guid id)
         {
-            DeletePhone(new Phone { PhoneId = id });
+            DeletePhone(new Phone { Id = id });
             return RedirectToAction("Index");
         }
 
