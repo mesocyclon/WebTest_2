@@ -29,6 +29,7 @@ namespace WebTest_2.Controllers
             ViewBag.Phones = _dBContext.Phones.ToList();
 
             ViewBag.DataForm = "Связь пользователя и телефона";
+            
 
             return View();
         }
@@ -175,9 +176,11 @@ namespace WebTest_2.Controllers
 
         public IActionResult UsersToPhone(Guid id_1, Guid id_2)
         {
-            //PhoneBook model = id_1 == default ? new PhoneBook() : GetPBById(id_1,id_2);
+            System.Guid id_11 = new Guid("c6c4fbe0-8d64-4725-a520-08d993b2fabb");
+            System.Guid id_12 = new Guid("6e60aa30-45e4-450f-04fd-08d993b8bf9d");
+            ;            //PhoneBook model = id_1 == default ? new PhoneBook() : GetPBById(id_1,id_2);
             //return View(model);
-            PhoneBook PhoneBook = new PhoneBook { PhoneId = id_1, UserId = id_1};
+            PhoneBook PhoneBook = new PhoneBook { PhoneId = id_12, UserId = id_11};
                    _dBContext.Add<PhoneBook>(PhoneBook);
                   _dBContext.SaveChanges();
 
