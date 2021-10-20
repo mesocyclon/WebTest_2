@@ -19,7 +19,7 @@ namespace WebTest_2.Models
         public string SecondName { get; set; }
         public DateTime Date1 { get; set; }
 
-       // public List<User> Users { get; set; }
+        // public List<User> Users { get; set; }
     }
 
     public class Phone
