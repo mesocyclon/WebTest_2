@@ -8,6 +8,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebTest_2.Models;
 using Newtonsoft.Json.Linq;
+using ClosedXML.Excel;
+using System.IO;
 
 namespace WebTest_2.Controllers
 {
@@ -36,6 +38,73 @@ namespace WebTest_2.Controllers
         public HomeController()
         {
             _dBContext = new SqlDBContext();
+        }
+
+        public ActionResult Export()
+        {
+            List<User> UserE = _dBContext.Users.ToList();
+            List<Phone> PhoneE = _dBContext.Phones.ToList();
+
+
+            using (XLWorkbook workbook = new XLWorkbook(XLEventTracking.Disabled))
+            {
+                //Examples: https://github.com/ClosedXML/ClosedXML/tree/develop/ClosedXML.Examples
+
+                var worksheetUsers = workbook.Worksheets.Add("Пользователи");
+
+                
+                var columnFromRange = worksheetUsers.Range("B1:B9").FirstColumn();
+
+                columnFromRange.Cell(1).Style.Fill.BackgroundColor = XLColor.Red;
+                columnFromRange.Cells("2").Style.Fill.BackgroundColor = XLColor.Blue;
+                columnFromRange.Cells("3,5:6").Style.Fill.BackgroundColor = XLColor.Red;
+                columnFromRange.Cells(8, 9).Style.Fill.BackgroundColor = XLColor.Blue;
+
+                worksheetUsers.Cell("B2").Value = "Фамилия";
+                worksheetUsers.Cell("C2").Value = "Имя";
+                worksheetUsers.Cell("D2").Value = "Отчество";
+                worksheetUsers.Cell("E2").Value = "Дата рождения";
+                worksheetUsers.Row(2).Style.Font.Bold = true;
+
+                //нумерация строк/столбцов начинается с индекса 1 (не 0)
+                for (int i = 0; i < UserE.Count; i++)
+                {
+                    worksheetUsers.Cell(i + 3, 2).Value = UserE[i].FirstName;
+                    worksheetUsers.Cell(i + 3, 3).Value = UserE[i].LastName;
+                    worksheetUsers.Cell(i + 3, 4).Value = UserE[i].SecondName;
+                    worksheetUsers.Cell(i + 3, 5).Value = UserE[i].DateBirth;
+                    worksheetUsers.Cell(i + 3, 5).DataType = XLDataType.DateTime;
+                    
+                }
+
+                var worksheetPhone = workbook.Worksheets.Add("Телефоны");
+
+
+                worksheetPhone.Cell("A1").Value = "ID";
+                worksheetPhone.Cell("B1").Value = "Телефон";
+               
+                worksheetPhone.Row(1).Style.Font.Bold = true;
+
+                //нумерация строк/столбцов начинается с индекса 1 (не 0)
+                for (int i = 0; i < PhoneE.Count; i++)
+                {
+                    worksheetPhone.Cell(i + 2, 1).Value = PhoneE[i].Id;
+                    worksheetPhone.Cell(i + 2, 2).Value = PhoneE[i].PhoneNumber;
+                   
+                }
+
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    stream.Flush();
+
+                    return new FileContentResult(stream.ToArray(),
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                    {
+                        FileDownloadName = $"exports_{DateTime.UtcNow.ToShortDateString()}.xlsx"
+                    };
+                }
+            }
         }
 
         public IActionResult Index()
@@ -189,9 +258,9 @@ namespace WebTest_2.Controllers
                 if (row.Key == "phone-id")
                     idPhone = new Guid(row.Value);
             }
-
+           
             Phone PhoneNum = idPhone == default ? new Phone() : GetPhoneById(idPhone);
-            
+           
             ViewBag.PhoneNum = PhoneNum;
             return View("~/Views/Home/Phones/PhoneEdit.cshtml");
         }

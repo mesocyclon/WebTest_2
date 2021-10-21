@@ -42,13 +42,13 @@
                 <td>
                     @foreach (var p in @row.phone_list)
                     {
-                    <form method="post" asp-controller="Home" asp-action="UsersPhoneEdit">
-                        <input type="hidden" name="user-id" value="@row.id" />
-                        <input type="hidden" name="phone-id" value="@p.id" />
-                        <input type="hidden" name="phone-id11111" value="@p.id" />
-                        <button type="submit">отправить</button>
-                        <a class="btn btn-primary m-2" role="button" type="submit" asp-controller="Home" asp-action="UsersPhoneEdit" asp-route-idPhone="@p.id" asp-route-idUser="@row.id">@p.phone</a>
-                    </form>
+                        <form method="post" asp-controller="Home" asp-action="UsersPhoneEdit">
+                            <input type="hidden" name="user-id" value="@row.id" />
+                            <input type="hidden" name="phone-id" value="@p.id" />
+                            <input type="hidden" name="phone-id11111" value="@p.id" />
+                            <button type="submit">отправить</button>
+                            <a class="btn btn-primary m-2" role="button" type="submit" asp-controller="Home" asp-action="UsersPhoneEdit" asp-route-idPhone="@p.id" asp-route-idUser="@row.id">@p.phone</a>
+                        </form>
                     }
                 </td>
 
@@ -112,5 +112,12 @@
         }
     </tbody>
 </table>
+
+<h2>
+    Экспорт файла Excel
+</h2>
+<div>
+    <a href="@Url.RouteUrl("Default", new { controller = "Home", action = "Export"})">Скачать файл</a>
+</div>
 
 
