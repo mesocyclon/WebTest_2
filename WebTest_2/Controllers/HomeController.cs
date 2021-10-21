@@ -52,13 +52,19 @@ namespace WebTest_2.Controllers
 
                 var worksheetUsers = workbook.Worksheets.Add("Пользователи");
 
-                
-                var columnFromRange = worksheetUsers.Range("B1:B9").FirstColumn();
+
+                int row = 1;
+                int col = 2;
+
+                worksheetUsers.Range(worksheetUsers.Cell(row, col), worksheetUsers.Cell(row, col+4)).Merge();
+
+
+                var columnFromRange = worksheetUsers.Range("B2:G2").FirstRow();
 
                 columnFromRange.Cell(1).Style.Fill.BackgroundColor = XLColor.Red;
                 columnFromRange.Cells("2").Style.Fill.BackgroundColor = XLColor.Blue;
                 columnFromRange.Cells("3,5:6").Style.Fill.BackgroundColor = XLColor.Red;
-                columnFromRange.Cells(8, 9).Style.Fill.BackgroundColor = XLColor.Blue;
+              //  columnFromRange.Cells(8, 9).Style.Fill.BackgroundColor = XLColor.Blue;
 
                 worksheetUsers.Cell("B2").Value = "Фамилия";
                 worksheetUsers.Cell("C2").Value = "Имя";
