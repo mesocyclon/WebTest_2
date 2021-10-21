@@ -10,6 +10,7 @@ using WebTest_2.Models;
 using Newtonsoft.Json.Linq;
 using ClosedXML.Excel;
 using System.IO;
+using Microsoft.Data.SqlClient;
 
 namespace WebTest_2.Controllers
 {
@@ -42,8 +43,11 @@ namespace WebTest_2.Controllers
 
         public ActionResult Export()
         {
-            List<User> UserE = _dBContext.Users.ToList();
-            List<Phone> PhoneE = _dBContext.Phones.ToList();
+            // SqlParameter param = new SqlParameter("@name", "%Tom%");
+            //SqlParameter param = new SqlParameter();
+            var UserE = _dBContext.Users.FromSqlRaw("SELECT * FROM Users").ToList();//CreateQuery<DbDataRecord>("SELECT c.FirstName FROM Customers AS c"); ;
+          //  List<Phone>
+            var PhoneE = _dBContext.Phones.ToList();
 
 
             using (XLWorkbook workbook = new XLWorkbook(XLEventTracking.Disabled))
