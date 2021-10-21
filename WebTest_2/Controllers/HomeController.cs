@@ -58,6 +58,8 @@ namespace WebTest_2.Controllers
 
                 worksheetUsers.Range(worksheetUsers.Cell(row, col), worksheetUsers.Cell(row, col+4)).Merge();
 
+                worksheetUsers.Cell("C1").Value = "gdsgdz";
+
 
                 var columnFromRange = worksheetUsers.Range("B2:G2").FirstRow();
 
